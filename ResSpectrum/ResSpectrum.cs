@@ -12,12 +12,12 @@ using System.Text.RegularExpressions;
 
 namespace SerialPortConnection
 {
-    public partial class Form1 : Form
+    public partial class ResSpectrum : Form
     {
         SerialPort sp1 = new SerialPort();
         //sp1.ReceivedBytesThreshold = 1;//只要有1个字符送达端口时便触发DataReceived事件 
          
-        public Form1()
+        public ResSpectrum()
         {
             InitializeComponent();
         }
@@ -25,7 +25,7 @@ namespace SerialPortConnection
         //加载
         private void Form1_Load(object sender, EventArgs e)
         {
-            INIFILE.Profile.LoadProfile();//加载所有
+            Profile.LoadProfile();//加载所有
             
            // 预置波特率
             switch (Profile.G_BAUDRATE)
@@ -140,18 +140,13 @@ namespace SerialPortConnection
             }
 
             //串口设置默认选择项
-            cbSerial.SelectedIndex = 1;         //note：获得COM9口，但别忘修改
-            //cbBaudRate.SelectedIndex = 5;
-           // cbDataBits.SelectedIndex = 3;
-           // cbStop.SelectedIndex = 0;
-          //  cbParity.SelectedIndex = 0;
             sp1.BaudRate = 9600;
 
             Control.CheckForIllegalCrossThreadCalls = false;    //这个类中我们不检查跨线程的调用是否合法(因为.net 2.0以后加强了安全机制,，不允许在winform中直接跨线程访问控件的属性)
             sp1.DataReceived += new SerialDataReceivedEventHandler(sp1_DataReceived);
             //sp1.ReceivedBytesThreshold = 1;
 
-            radio1.Checked = true;  //单选按钮默认是选中的
+            rdSend16.Checked = true;  //单选按钮默认是选中的
             rbRcvStr.Checked = true;
 
             //准备就绪              
@@ -236,7 +231,7 @@ namespace SerialPortConnection
             }
 
             String strSend = txtSend.Text;
-            if (radio1.Checked == true)	//“HEX发送” 按钮 
+            if (rdSend16.Checked == true)	//“HEX发送” 按钮 
             {
                 //处理数字转换
                 string sendBuf = strSend;
@@ -418,7 +413,7 @@ namespace SerialPortConnection
 
         private void txtSend_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (radio1.Checked== true)
+            if (rdSend16.Checked== true)
             {
                 //正则匹配
                 string patten = "[0-9a-fA-F]|\b|0x|0X| "; //“\b”：退格键
